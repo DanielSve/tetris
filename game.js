@@ -174,6 +174,27 @@ let shapes = [
   },
 ];
 
+document.addEventListener('keydown', (e) => {
+  removeShape();
+  if (
+    e.key === 'ArrowRight' &&
+    !collidesRight(shape.position[shape.rotation])
+  ) {
+    moveRight();
+  } else if (
+    e.key === 'ArrowLeft' &&
+    !collidesLeft(shape.position[shape.rotation])
+  ) {
+    moveLeft();
+  } else if (e.key === 'ArrowDown' && !checkCollision()) {
+    moveDown();
+  }
+  if (e.key === 'Shift') {
+    increaseRotation();
+  }
+  renderShape();
+});
+
 const renderNextPiece = (shape) => {
   nextPieceEl.innerHTML = 'NEXT';
   shape.reset();
@@ -208,7 +229,7 @@ const renderShape = () => {
   });
 };
 
-const removeColor = () => {
+const removeShape = () => {
   shape.position[shape.rotation].forEach((s) => {
     board[s.y][s.x].color = 'black';
     boardEl[s.y][s.x].style.background = 'black';
@@ -247,27 +268,6 @@ const increaseRotation = () => {
     shape.rotation = nextPos;
   }
 };
-
-document.addEventListener('keydown', (e) => {
-  removeColor();
-  if (
-    e.key === 'ArrowRight' &&
-    !collidesRight(shape.position[shape.rotation])
-  ) {
-    moveRight();
-  } else if (
-    e.key === 'ArrowLeft' &&
-    !collidesLeft(shape.position[shape.rotation])
-  ) {
-    moveLeft();
-  } else if (e.key === 'ArrowDown' && !checkCollision()) {
-    moveDown();
-  }
-  if (e.key === 'Shift') {
-    increaseRotation();
-  }
-  renderShape();
-});
 
 const checkCollision = () => {
   for (let i = 0; i < shape.position[shape.rotation].length; i++) {
@@ -325,7 +325,7 @@ let showGameOver = () => {
 
 const run = () => {
   if (running) {
-    removeColor();
+    removeShape();
     renderShape();
   }
 };
@@ -333,7 +333,7 @@ const run = () => {
 const moveAuto = () => {
   if (running) {
     if (!checkCollision()) {
-      removeColor();
+      removeShape();
       moveDown();
     } else {
       savePosition();
