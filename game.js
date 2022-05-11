@@ -188,9 +188,6 @@ const renderNextPiece = (shape) => {
   }
 };
 
-fillBoard();
-nextShape = shapes[random];
-
 const initiateNextRound = () => {
   renderBoard();
   shape = nextShape;
@@ -199,8 +196,6 @@ const initiateNextRound = () => {
   shape.reset();
   renderNextPiece(nextShape);
 };
-
-initiateNextRound();
 
 const moveDown = () => shape.position.forEach((p) => p.forEach((p) => p.y++));
 const moveLeft = () => shape.position.forEach((p) => p.forEach((p) => p.x--));
@@ -274,13 +269,6 @@ document.addEventListener('keydown', (e) => {
   renderShape();
 });
 
-const run = () => {
-  if (running) {
-    removeColor();
-    renderShape();
-  }
-};
-
 const checkCollision = () => {
   for (let i = 0; i < shape.position[shape.rotation].length; i++) {
     let y = shape.position[shape.rotation][i].y;
@@ -335,6 +323,13 @@ let showGameOver = () => {
   running = false;
 };
 
+const run = () => {
+  if (running) {
+    removeColor();
+    renderShape();
+  }
+};
+
 const moveAuto = () => {
   if (running) {
     if (!checkCollision()) {
@@ -350,6 +345,10 @@ const moveAuto = () => {
     checkGameOver() && showGameOver();
   }
 };
+
+nextShape = shapes[random];
+fillBoard();
+initiateNextRound();
 
 let gameInterval = setInterval(run, 20);
 let tick = setInterval(moveAuto, 400);
