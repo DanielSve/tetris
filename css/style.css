@@ -49,11 +49,11 @@
 }
 
 .next-piece {
+  margin-top: 25px;
   text-align: center;
   position:relative;
   width: 80 px;
   height: 80px;
-
   color: white
 }
 
@@ -63,10 +63,10 @@
   margin: 25px;
 }
 
-.lines {
-  margin: 30px;
-  margin-bottom: 30px;
+.lines, .level-right {
+  margin: 28px 0px 20px 0px;
   color: white;
+  padding: 10px;
 }
 
 .next {
@@ -85,4 +85,13 @@
 
 .hide {
   display: none;
+}
+
+.msg {
+  font-size: 19px;
+  position:absolute;
+  left: 65px;
+  top: 40px;
+  color: white;
+  z-index:1;
 }

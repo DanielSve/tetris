@@ -1,19 +1,25 @@
 let gameScreen = document.querySelector('.game-div');
 let cube = document.createElement('div');
-let gameOverEl = document.querySelector('.game-over');
+let messageEl = document.querySelector('.game-over');
+let levelEl = document.querySelector('.msg');
+let levelRightEl = document.querySelector('.level-right');
 let linesEl = document.querySelector('.lines');
 let nextPieceEl = document.querySelector('.next-piece');
 
 let random = Math.floor(Math.random() * 4);
 let lines = 0;
+let linesDiff = 0;
 let board = [];
 let boardEl = [];
 let colors = ['green', 'red', 'blue', 'yellow'];
 let currentColor = colors[Math.floor(Math.random() * 3)];
-let running = true;
+let running = false;
 let shape = '';
 let nextShape = '';
 let nextColor = colors[Math.floor(Math.random() * 3)];
+let newLevel = true;
+let level = 0;
+let moveInterval = 500;
 
 const fillBoard = () => {
   let yCurrent = 0;
@@ -306,6 +312,7 @@ const checkRemoveRow = () => {
         countFilled++;
         if (countFilled > 9) {
           lines++;
+          linesDiff++;
           linesEl.textContent = 'LINES: ' + lines;
           removeRow(i);
         }
@@ -319,7 +326,7 @@ const checkGameOver = () => {
 };
 
 let showGameOver = () => {
-  gameOverEl.classList.remove('hide');
+  messageEl.classList.remove('hide');
   running = false;
 };
 
@@ -330,7 +337,36 @@ const run = () => {
   }
 };
 
-const moveAuto = () => {
+const showNewLevel = () => {
+  levelEl.classList.remove('hide');
+  levelEl.textContent = `LEVEL ${level}`;
+};
+
+const hideNewLevel = () => levelEl.classList.add('hide');
+
+const startNewLevel = async () => {
+  fillBoard();
+  renderBoard();
+  running = false;
+  level++;
+  showNewLevel();
+  levelRightEl.textContent = `LEVEL: ${level}`;
+  clearInterval(tick);
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  hideNewLevel();
+  moveInterval -= 50;
+  tick = setInterval(moveAuto, moveInterval);
+  running = true;
+};
+
+const checkNewLevel = () => {
+  if (linesDiff >= 10) {
+    running = false;
+    linesDiff = 0;
+  }
+};
+
+const moveAuto = async () => {
   if (running) {
     if (!checkCollision()) {
       removeShape();
@@ -343,12 +379,16 @@ const moveAuto = () => {
       initiateNextRound();
     }
     checkGameOver() && showGameOver();
+    checkNewLevel();
+  } else if (!checkGameOver()) {
+    startNewLevel();
+    initiateNextRound();
   }
 };
 
 nextShape = shapes[random];
 fillBoard();
-initiateNextRound();
+// initiateNextRound();
 
 let gameInterval = setInterval(run, 20);
-let tick = setInterval(moveAuto, 400);
+let tick = setInterval(moveAuto, moveInterval);
