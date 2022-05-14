@@ -347,8 +347,6 @@ const showNewLevel = () => {
 const hideNewLevel = () => levelEl.classList.add('hide');
 
 const startNewLevel = async () => {
-  fillBoard();
-  initiateNextRound();
   level++;
   showNewLevel();
   levelRightEl.textContent = `LEVEL: ${level}`;
@@ -386,8 +384,10 @@ const moveAuto = async () => {
   }
 };
 
+
 nextShape = shapes[random];
 fillBoard();
+initiateNextRound()
 
 let gameInterval = setInterval(run, 20);
 let tick = setInterval(moveAuto, moveInterval);
