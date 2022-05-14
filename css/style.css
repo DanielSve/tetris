@@ -64,9 +64,13 @@
 }
 
 .lines, .level-right {
-  margin: 28px 0px 20px 0px;
-  color: white;
-  padding: 10px;
+  margin: 28px 0px 0px 0px;
+  color: hsl(0, 0%, 100%);
+  padding: 10px 0px 2px 0;
+}
+
+.lines {
+  padding-top: 0;
 }
 
 .next {

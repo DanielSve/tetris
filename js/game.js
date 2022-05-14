@@ -181,24 +181,26 @@ let shapes = [
 ];
 
 document.addEventListener('keydown', (e) => {
-  removeShape();
-  if (
-    e.key === 'ArrowRight' &&
-    !collidesRight(shape.position[shape.rotation])
-  ) {
-    moveRight();
-  } else if (
-    e.key === 'ArrowLeft' &&
-    !collidesLeft(shape.position[shape.rotation])
-  ) {
-    moveLeft();
-  } else if (e.key === 'ArrowDown' && !checkCollision()) {
-    moveDown();
+  if (running) {
+    removeShape();
+    if (
+      e.key === 'ArrowRight' &&
+      !collidesRight(shape.position[shape.rotation])
+    ) {
+      moveRight();
+    } else if (
+      e.key === 'ArrowLeft' &&
+      !collidesLeft(shape.position[shape.rotation])
+    ) {
+      moveLeft();
+    } else if (e.key === 'ArrowDown' && !checkCollision()) {
+      moveDown();
+    }
+    if (e.key === 'Shift') {
+      increaseRotation();
+    }
+    renderShape();
   }
-  if (e.key === 'Shift') {
-    increaseRotation();
-  }
-  renderShape();
 });
 
 const renderNextPiece = (shape) => {
@@ -332,7 +334,7 @@ let showGameOver = () => {
 
 const run = () => {
   if (running) {
-    removeShape();
+    // removeShape();
     renderShape();
   }
 };
@@ -346,8 +348,7 @@ const hideNewLevel = () => levelEl.classList.add('hide');
 
 const startNewLevel = async () => {
   fillBoard();
-  renderBoard();
-  running = false;
+  initiateNextRound();
   level++;
   showNewLevel();
   levelRightEl.textContent = `LEVEL: ${level}`;
@@ -362,7 +363,7 @@ const startNewLevel = async () => {
 const checkNewLevel = () => {
   if (linesDiff >= 10) {
     running = false;
-    linesDiff = 0;
+    linesDiff = linesDiff - 10;
   }
 };
 
@@ -381,14 +382,12 @@ const moveAuto = async () => {
     checkGameOver() && showGameOver();
     checkNewLevel();
   } else if (!checkGameOver()) {
-    startNewLevel();
-    initiateNextRound();
+    await startNewLevel();
   }
 };
 
 nextShape = shapes[random];
 fillBoard();
-// initiateNextRound();
 
 let gameInterval = setInterval(run, 20);
 let tick = setInterval(moveAuto, moveInterval);
